@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Simple Billing System</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial;
+        }
+
+        body{
+            background:#f4f4f4;
+            padding:30px;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:30px;
+            color:#333;
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:30px;
+        }
+
+        .card{
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .card h2{
+            margin-bottom:20px;
+            color:#444;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin-top:10px;
+            border:1px solid #ccc;
+            border-radius:8px;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            margin-top:15px;
+            background:#2563eb;
+            color:white;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        button:hover{
+            background:#1d4ed8;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        table th{
+            background:#2563eb;
+            color:white;
+            padding:10px;
+        }
+
+        table td{
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:center;
+        }
+
+        .bill-card{
+            margin-top:25px;
+            background:#f9fafb;
+            padding:20px;
+            border-radius:10px;
+        }
+
+        .bill-card h3{
+            margin-top:10px;
+        }
+
+        .total{
+            color:green;
+            font-size:24px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>GST Billing System</h1>
+
+<div class="container">
+
+    <!-- ADD PRODUCT -->
+
+    <div class="card">
+
+        <h2>Add Product</h2>
+
+        <input type="text" id="productName" placeholder="Product Name">
+
+        <input type="number" id="price" placeholder="Price">
+
+        <input type="number" id="gst" placeholder="GST %">
+
+        <input type="number" id="quantity" placeholder="Quantity">
+
+        <button onclick="addProduct()">
+            Add Product
+        </button>
+
+    </div>
+
+    <!-- BILLING -->
+
+    <div class="card">
+
+        <h2>Billing Summary</h2>
+
+        <table>
+
+            <thead>
+
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>GST</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+
+            </thead>
+
+            <tbody id="productTable">
+
+            </tbody>
+
+        </table>
+
+        <div class="bill-card">
+
+            <h3>Subtotal : ₹ <span id="subtotal">0</span></h3>
+
+            <h3>GST Total : ₹ <span id="gstTotal">0</span></h3>
+
+            <h3 class="total">
+                Grand Total : ₹ <span id="grandTotal">0</span>
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    let products = [];
+
+    function addProduct(){
+
+        let productName = document.getElementById("productName").value;
+
+        let price = parseFloat(document.getElementById("price").value);
+
+        let gst = parseFloat(document.getElementById("gst").value);
+
+        let quantity = parseInt(document.getElementById("quantity").value);
+
+        let subtotal = price * quantity;
+
+        let gstAmount = subtotal * gst / 100;
+
+        let total = subtotal + gstAmount;
+
+        let product = {
+            productName,
+            price,
+            gst,
+            quantity,
+            total
+        };
+
+        products.push(product);
+
+        displayProducts();
+
+        clearInputs();
+    }
+
+    function displayProducts(){
+
+        let table = document.getElementById("productTable");
+
+        table.innerHTML = "";
+
+        let subtotal = 0;
+
+        let gstTotal = 0;
+
+        let grandTotal = 0;
+
+        products.forEach(product => {
+
+            let row = `
+                <tr>
+
+                    <td>${product.productName}</td>
+
+                    <td>₹${product.price}</td>
+
+                    <td>${product.gst}%</td>
+
+                    <td>${product.quantity}</td>
+
+                    <td>₹${product.total.toFixed(2)}</td>
+
+                </tr>
+            `;
+
+            table.innerHTML += row;
+
+            let itemSubtotal = product.price * product.quantity;
+
+            let itemGST = itemSubtotal * product.gst / 100;
+
+            subtotal += itemSubtotal;
+
+            gstTotal += itemGST;
+
+            grandTotal += product.total;
+        });
+
+        document.getElementById("subtotal").innerText =
+            subtotal.toFixed(2);
+
+        document.getElementById("gstTotal").innerText =
+            gstTotal.toFixed(2);
+
+        document.getElementById("grandTotal").innerText =
+            grandTotal.toFixed(2);
+    }
+
+    function clearInputs(){
+
+        document.getElementById("productName").value = "";
+
+        document.getElementById("price").value = "";
+
+        document.getElementById("gst").value = "";
+
+        document.getElementById("quantity").value = "";
+    }
+
+</script>
+
+</body>
+
+</html>

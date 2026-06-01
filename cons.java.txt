@@ -1,0 +1,14 @@
+class cons{
+int length,width;
+class cons(){
+length=1001;
+width= 200;
+int area = length*width;
+System.out.println(area);
+}
+public class cons{
+public static void main(String args[]){
+cons mycon = new cons();
+mycons.cons();
+}
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Form</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background:#f4f4f4;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .box{
+            background:white;
+            padding:30px;
+            width:350px;
+            border-radius:10px;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin-top:10px;
+        }
+
+        button{
+            width:100%;
+            padding:10px;
+            margin-top:15px;
+            background:blue;
+            color:white;
+            border:none;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="box">
+
+    <h2>Employee Form</h2>
+
+    <input type="number" id="empNo" placeholder="Emp No">
+
+    <input type="text" id="name" placeholder="Name">
+
+    <input type="text" id="address" placeholder="Address">
+
+    <button onclick="saveEmployee()">Add Employee</button>
+
+</div>
+
+<script>
+
+    function saveEmployee(){
+
+        const employee = {
+
+            empNo: document.getElementById("empNo").value,
+            name: document.getElementById("name").value,
+            address: document.getElementById("address").value
+        };
+
+        fetch("http://localhost:8080/save",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body: JSON.stringify(employee)
+
+        })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                alert("Employee Saved Successfully");
+
+                console.log(data);
+
+            });
+
+    }
+
+</script>
+
+</body>
+</html>
