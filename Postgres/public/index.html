@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee CRUD</title>
+</head>
+<body>
+
+<h2>Employee CRUD</h2>
+
+<input id="id" placeholder="ID (for Update/Delete)">
+<br><br>
+
+<input id="name" placeholder="Name">
+<br><br>
+
+<input id="email" placeholder="Email">
+<br><br>
+
+<input id="salary" placeholder="Salary">
+<br><br>
+
+<button onclick="addEmployee()">Add</button>
+<button onclick="updateEmployee()">Update</button>
+<button onclick="deleteEmployee()">Delete</button>
+<button onclick="loadEmployees()">View</button>
+
+<hr>
+
+<div id="result"></div>
+
+<script>
+
+async function addEmployee() {
+
+    await fetch('/employees', {
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify({
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            salary: document.getElementById('salary').value
+        })
+    });
+
+    alert("Employee Added");
+    loadEmployees();
+}
+
+async function updateEmployee() {
+
+    const id = document.getElementById('id').value;
+
+    await fetch(`/employees/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify({
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            salary: document.getElementById('salary').value
+        })
+    });
+
+    alert("Employee Updated");
+    loadEmployees();
+}
+
+async function deleteEmployee() {
+
+    const id = document.getElementById('id').value;
+
+    await fetch(`/employees/${id}`, {
+        method: 'DELETE'
+    });
+
+    alert("Employee Deleted");
+    loadEmployees();
+}
+
+async function loadEmployees() {
+
+    const res = await fetch('/employees');
+    const data = await res.json();
+
+    let html = `
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Salary</th>
+        </tr>
+    `;
+
+    data.forEach(emp => {
+        html += `
+        <tr>
+            <td>${emp.id}</td>
+            <td>${emp.name}</td>
+            <td>${emp.email}</td>
+            <td>${emp.salary}</td>
+        </tr>
+        `;
+    });
+
+    html += "</table>";
+
+    document.getElementById('result').innerHTML = html;
+}
+
+loadEmployees();
+
+</script>
+
+</body>
+</html>
